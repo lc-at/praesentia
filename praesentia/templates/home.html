@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Praesentia</title>
+    <link rel="stylesheet" href="https://unpkg.com/awsm.css/dist/awsm.min.css">
+</head>
+
+<body>
+    <header>
+        <h1>Praesentia</h1>
+        <p>Fill your presence without hassle</p>
+    </header>
+    <main>
+        <article>
+            <section>
+                <p>Simple Python-based web application to allow UGM students to fill their
+                    QR presence list without having another device in hand.</p>
+                <p>
+                    <small><strong>Important!</strong> Using Praesentia will log you out from your
+                        SIMASTER mobile app. Please logout and re-login after using Praesentia.</small>
+                </p>
+            </section>
+            <section>
+                <form>
+                    <fieldset>
+                        <label>UGM ID:</label>
+                        <input type="text" id="username" placeholder="john.doe1998">
+                        <label>Password:</label>
+                        <input type="password" id="password">
+                        <label>
+                            <input type="checkbox" id="hurry">
+                            huRRy! mode
+                            <small>(randomize lat/long)</small>
+                        </label>
+                        <label>Latitude:</label>
+                        <input type="number" id="latitude" placeholder="132.12120">
+                        <label>Longitude:</label>
+                        <input type="number" id="longitude" placeholder="-118.1021291">
+                        <small>
+                            <button type="button" id="getCoordinate">Get coordinate from GPS</button>
+                        </small>
+                    </fieldset>
+                    <label>
+                        <small>
+                            <div id="reader" width="600px" class="mb-3"></div>
+                        </small>
+                    </label>
+                    <br>
+                    <button type="button" id="btnSubmit">Submit</button>
+                </form>
+            </section>
+            <section>
+                <small>Don't worry, your data will be safe. This app doesn't even have a database.
+                    <br>Still concerned? Just host Praesentia yourself.
+                    It's open source, see it on <a href="https://github.com/praesentia">GitHub</a>.</small>
+            </section>
+        </article>
+    </main>
+    <footer>
+        <p>Praesentia v1.0.0</p>
+    </footer>
+    <script src="{{ url_for('static', filename='html5-qrcode.min.js') }}"></script>
+    <script>
+        function onScanSuccess(decodedText, decodedResult) {
+            alert(decodedText);
+            alert(decodedResult);
+            console.log(`Code matched = ${decodedText}`, decodedResult);
+        }
+
+        function onScanFailure(error) {
+            console.warn(`Code scan error = ${error}`);
+        }
+
+        let html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader", { fps: 10, qrbox: 250 }, /* verbose= */ false);
+        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    </script>
+</body>
+
+</html>
