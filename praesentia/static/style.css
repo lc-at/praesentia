@@ -42,6 +42,19 @@
     overflow: hidden !important;
 }
 
+#reader__camera_selection {
+    display: inline;
+    font-size: 80%;
+    max-width: 200px;
+    overflow: hidden;
+}
+
+#reader > div:nth-child(1) > span:nth-child(1) > a {
+    font-size: smaller;
+    color: inherit;
+    text-decoration: none;
+}
+
 footer {
     color: grey;
     text-align: center;
