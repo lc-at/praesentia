@@ -44,24 +44,22 @@ class SimasterQrPresence:
         self.account_data['name'] = data['namaLengkap']
         self.account_data['group'] = data['groupMenuNama']
         self.account_data['id'] = data['userTipeNomor']
-        print(data)
         return self._commit_device()
 
     def send_qr_presence(self, qr_data, lat, long):
         token = self._request_token()
         if not token:
-            return False
+            return None
         data = self.session.post(self.QRP_SCAN_URL, headers={**self.QRP_AUTH_HEADER},
-                                data={
-                                    token['token']: token['value'],
-                                    'device': self.session_id,
-                                    'group': self.group_id,
-                                    'code': qr_data,
-                                    'latitudeGps': lat,
-                                    'longitudeGps': long,
+                                 data={
+            token['token']: token['value'],
+            'device': self.session_id,
+            'group': self.group_id,
+            'code': qr_data,
+            'latitudeGps': lat,
+            'longitudeGps': long,
         }).json()
         return data['status'], data['heading'], data['message']
-        
 
     def _commit_device(self):
         if not self.logged_in:
