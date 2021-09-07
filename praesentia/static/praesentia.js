@@ -12,6 +12,7 @@ html5QrcodeScanner.render(onScanSuccess);
 function onScanSuccess(decodedText, decodedResult) {
     $('#qrData').text(decodedText);
     qrData = decodedText;
+    $('#btnSubmit').click();
 }
 
 function randomizeLatLong() {

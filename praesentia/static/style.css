@@ -55,6 +55,10 @@
     text-decoration: none;
 }
 
+#reader {
+    max-width: 100% !important;
+}
+
 footer {
     color: grey;
     text-align: center;
