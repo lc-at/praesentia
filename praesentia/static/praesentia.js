@@ -12,10 +12,7 @@ html5QrcodeScanner.render(onScanSuccess);
 function onScanSuccess(decodedText, decodedResult) {
     $('#qrData').text(decodedText);
     qrData = decodedText;
-    $.when($('#reader__dashboard_section_csr > span:nth-child(2) > button:nth-child(2)').click()).done(function () {
-        $('#btnSubmit').click();
-    });
-
+    $('#reader__dashboard_section_csr > span:nth-child(2) > button:nth-child(2)').click();
 }
 
 function randomizeLatLong() {
