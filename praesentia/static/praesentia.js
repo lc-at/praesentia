@@ -7,19 +7,11 @@ let html5QrcodeScanner = new Html5QrcodeScanner(
     });
 
 
-html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+html5QrcodeScanner.render(onScanSuccess);
 
 function onScanSuccess(decodedText, decodedResult) {
     $('#qrData').text(decodedText);
     qrData = decodedText;
-}
-
-function onScanFailure(err) {
-    swal.fire({
-        title: 'Error!',
-        text: `Unable to scan QR code. Please try another image. Wrong image?`,
-        icon: 'error',
-    })
 }
 
 function randomizeLatLong() {
