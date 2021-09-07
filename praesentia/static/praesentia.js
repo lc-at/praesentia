@@ -4,9 +4,6 @@ let html5QrcodeScanner = new Html5QrcodeScanner(
     {
         fps: 10,
         qrbox: 250,
-        experimentalFeatures: {
-            useBarCodeDetectorIfSupported: true
-        }
     });
 
 
@@ -23,7 +20,6 @@ function onScanFailure(err) {
         text: `Unable to scan QR code. Please try another image. Wrong image?`,
         icon: 'error',
     })
-    html5QrcodeScanner.clear();
 }
 
 function randomizeLatLong() {
@@ -96,15 +92,11 @@ $('#btnSubmit').click(function () {
 
 $('#getLocation').click(function () {
     if (navigator.geolocation) {
-        const loc = navigator.geolocation.getCurrentPosition(function (position) {
+        navigator.geolocation.getCurrentPosition(function (position) {
             $('#latitude').val(position.coords.latitude);
             $('#longitude').val(position.coords.longitude);
         });
-        if (!loc) {
-            swal.fire('Error', 'Unable to get current location. Make sure you allowed this site\'s location access.', 'error');
-        }
     } else {
-        alert(2);
         swal.fire('Ooops...', 'Geolocation is not supported by this browser.', 'info');
     }
 });
