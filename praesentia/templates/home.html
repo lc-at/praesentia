@@ -6,79 +6,77 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Praesentia</title>
-    <link rel="stylesheet" href="https://unpkg.com/awsm.css/dist/awsm.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/pure-min.css"
+        integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aehk5" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
-    <header>
+    <div class="container">
         <h1>Praesentia</h1>
-        <p>Fill your presence without hassle</p>
-    </header>
-    <main>
-        <article>
-            <section>
-                <p>Simple Python-based web application to allow UGM students to fill their
-                    QR presence list without having another device in hand.</p>
-                <p>
-                    <small><strong>Important!</strong> Using Praesentia will log you out from your
-                        SIMASTER mobile app. Please logout and re-login after using Praesentia.</small>
-                </p>
-            </section>
-            <section>
-                <form>
-                    <fieldset>
-                        <label>UGM ID:</label>
-                        <input type="text" id="username" placeholder="john.doe1998">
-                        <label>Password:</label>
-                        <input type="password" id="password">
-                        <label>
-                            <input type="checkbox" id="hurry">
-                            huRRy! mode
-                            <small>(randomize lat/long)</small>
+        <p>Simple Python-based web application to allow UGM students to fill their
+            QR presence list without having another device in hand.</p>
+        <p>
+            <small><strong>Important!</strong> Important! Submitting this form will log you out of your SIMASTER mobile
+                app. Please logout and re-login after using Praesentia.</small>
+        <form class="pure-form pure-form-stacked">
+            <fieldset>
+                <label for="username">UGM ID:</label>
+                <input type="text" id="username" class="pure-input-1" placeholder="john.doe1998">
+                <span class="pure-form-message">without "@mail.ugm.ac.id" suffix</span>
+                <label for="password">Password:</label>
+                <input type="password" class="pure-input-1" id="password">
+                <label class="pure-checkbox">
+                    <input type="checkbox" id="hurry">
+                    huRRy! mode <small>(randomize lat/long)</small>
+                </label>
+                <div id="coordinateInputs">
+                    <div class="pure-g">
+                        <div class="pure-u-1-2 pure-g">
+                            <label for="latitude">Latitude:</label>
+                            <input type="number" id="latitude" class="pure-u-23-24" placeholder="132.12120">
+                        </div>
+                        <div class="pure-u-1-2 pure-g">
+                            <label for="longitude">Longitude:</label>
+                            <input type="number" id="longitude" class="pure-u-1" placeholder="-118.1021291">
+                        </div>
+                    </div>
+                    <small><button type="button" id="getLocation" class="pure-button pure-button-secondary">Get
+                            location from GPS</button>
+                    </small>
+                </div>
+                <div id="reader_container">
+                    <div id="reader" width="600px" class="mb-3"></div>
+                </div>
+                <label>Data: <code id="qrData">nothing has scanned</code></label><br>
+                <div class="pure-g">
+                    <div class="pure-u" style="margin-right: 1rem;">
+                        <button type="button" class="pure-button pure-button-primary" id="btnSubmit">Submit</button>
+                    </div>
+                    <div class="pure-u">
+                        <label class="pure-checkbox" for="rememberMe">
+                            <input type="checkbox" id="rememberMe">
+                            Remember me
                         </label>
-                        <label>Latitude:</label>
-                        <input type="number" id="latitude" placeholder="132.12120">
-                        <label>Longitude:</label>
-                        <input type="number" id="longitude" placeholder="-118.1021291">
-                        <small>
-                            <button type="button" id="getCoordinate">Get coordinate from GPS</button>
-                        </small>
-                    </fieldset>
-                    <label>
-                        <small>
-                            <div id="reader" width="600px" class="mb-3"></div>
-                        </small>
-                    </label>
-                    <br>
-                    <button type="button" id="btnSubmit">Submit</button>
-                </form>
-            </section>
-            <section>
-                <small>Don't worry, your data will be safe. This app doesn't even have a database.
-                    <br>Still concerned? Just host Praesentia yourself.
-                    It's open source, see it on <a href="https://github.com/praesentia">GitHub</a>.</small>
-            </section>
-        </article>
-    </main>
-    <footer>
-        <p>Praesentia v1.0.0</p>
-    </footer>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+
+        <p>Don't worry, your data will be safe. This app doesn't even have a database.
+            <br>Still concerned? Just host Praesentia yourself.
+            It's open source, see it on <a href="https://github.com/praesentia">GitHub</a>.
+        </p>
+        <footer>
+            <small>Praesentia v1.0.0</small>
+        </footer>
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="{{ url_for('static', filename='html5-qrcode.min.js') }}"></script>
-    <script>
-        function onScanSuccess(decodedText, decodedResult) {
-            alert(decodedText);
-            alert(decodedResult);
-            console.log(`Code matched = ${decodedText}`, decodedResult);
-        }
-
-        function onScanFailure(error) {
-            console.warn(`Code scan error = ${error}`);
-        }
-
-        let html5QrcodeScanner = new Html5QrcodeScanner(
-            "reader", { fps: 10, qrbox: 250 }, /* verbose= */ false);
-        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
-    </script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ url_for('static', filename='praesentia.js') }}"></script>
 </body>
 
 </html>

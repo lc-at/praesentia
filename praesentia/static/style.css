@@ -1,0 +1,49 @@
+.container {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 2rem;
+}
+
+@media (min-width: 576px) {
+    .container {
+        width: 540px;
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        width: 720px;
+    }
+}
+
+@media (min-width: 992px) {
+    .container {
+        width: 960px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container {
+        width: 1140px;
+    }
+}
+
+#reader {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+#reader__filescan_input {
+    display: inline !important;
+    text-overflow: ellipsis !important;
+    overflow: hidden !important;
+}
+
+footer {
+    color: grey;
+    text-align: center;
+    margin-top: 2rem;
+}
