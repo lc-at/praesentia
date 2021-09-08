@@ -14,6 +14,7 @@ function onScanSuccess(decodedText, _) {
     qrData = decodedText;
     $('#reader__dashboard_section_csr > span:nth-child(2) > button:nth-child(2)').click();
     $('#btnSubmit').click();
+    $('#hasQrData').show();
 }
 
 function randomizeLatLong() {
@@ -96,6 +97,7 @@ $('#getLocation').click(function () {
 });
 
 $(document).ready(function () {
+    $('#hasQrData').hide();
     if (localStorage.getItem('username')) {
         $('#username').val(localStorage.getItem('username'));
         $('#password').val(localStorage.getItem('password'));
