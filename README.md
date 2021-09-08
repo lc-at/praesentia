@@ -41,4 +41,4 @@ python wsgi.py
 Contribution in any form will be highly appreciated.
 
 ## License
-This project is licensed using MIT License.
+This project is licensed under MIT License.
