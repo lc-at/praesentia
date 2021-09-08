@@ -13,7 +13,7 @@ function onScanSuccess(decodedText, _) {
     $('#qrData').text(decodedText.slice(0, 20) + '...');
     qrData = decodedText;
     $('#reader__dashboard_section_csr > span:nth-child(2) > button:nth-child(2)').click();
-    $('#btnSubmit').click();
+    $('#btnSubmit').focus();
     $('#hasQrData').show();
 }
 
