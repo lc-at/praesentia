@@ -9,8 +9,8 @@ let html5QrcodeScanner = new Html5QrcodeScanner(
 
 html5QrcodeScanner.render(onScanSuccess);
 
-function onScanSuccess(decodedText, decodedResult) {
-    $('#qrData').text(decodedText);
+function onScanSuccess(decodedText, _) {
+    $('#qrData').text(decodedText.slice(0, 20) + '...');
     qrData = decodedText;
     $('#reader__dashboard_section_csr > span:nth-child(2) > button:nth-child(2)').click();
     $('#btnSubmit').click();
@@ -76,7 +76,7 @@ $('#btnSubmit').click(function () {
         const title = data.ok ? 'Success' : 'Error';
         return swal.fire({
             title: title,
-            html: `Message:<pre>${data.message}</pre>`,
+            html: `<code>${data.message}</code>`,
             icon: title.toLowerCase(),
         })
     }).fail(function () {

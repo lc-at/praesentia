@@ -54,9 +54,9 @@
     text-decoration: none;
 }
 
-#reader {
-    width: 100% !important;
+#reader_container {
     max-width: 100% !important;
+    overflow-x: hidden !important;
 }
 
 footer {
