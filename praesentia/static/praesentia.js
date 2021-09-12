@@ -6,10 +6,30 @@ let html5QrcodeScanner = new Html5QrcodeScanner(
         qrbox: 250,
     });
 
-
 html5QrcodeScanner.render(onScanSuccess);
 
+const target = document.querySelector('body');
+
+target.addEventListener('paste', (event) => {
+    let paste = event.clipboardData || window.clipboardData;
+
+    if(paste.files.length > 0) {
+        html5QrcodeScanner.html5Qrcode.scanFile(paste.files[0], true)
+        .then(decodedText => {
+            processingDecodedText(decodedText)
+        })
+        .catch(err => {
+            swal.fire('Error', 'Cannot read QR Code, Please make sure paste only the QR Code', 'error');
+        });
+    }
+});
+
+
 function onScanSuccess(decodedText, _) {
+    processingDecodedText(decodedText)
+}
+
+function processingDecodedText(decodedText) {
     $('#qrData').text(decodedText.slice(0, 20) + '...');
     qrData = decodedText;
     $('#reader__dashboard_section_csr > span:nth-child(2) > button:nth-child(2)').click();
