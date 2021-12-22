@@ -1,37 +1,42 @@
-let qrData = '';
-let html5QrcodeScanner = new Html5QrcodeScanner(
-    'reader',
-    {
-        fps: 10,
-        qrbox: 250,
-    });
+QrScanner.WORKER_PATH = 'static/qr-scanner-worker.min.js';
 
-html5QrcodeScanner.render(onScanSuccess);
+let qrData = '';
 
 $('body').on('paste', event => {
     let paste = event.originalEvent.clipboardData || window.clipboardData;
 
-    if(paste.files.length > 0) {
+    if (paste.files.length > 0) {
         html5QrcodeScanner.html5Qrcode.scanFile(paste.files[0], true)
-        .then(decodedText => {
-            processDecodedText(decodedText)
-        })
-        .catch(err => {
-            swal.fire('Error', 'Cannot read QR code. Please make sure to only paste a QR code image.', 'error');
-        });
+            .then(decodedText => {
+                processDecodedText(decodedText)
+            })
+            .catch(err => {
+                swal.fire('Error', 'Cannot read QR code. Please make sure to only paste a QR code image.', 'error');
+            });
     }
 
     event.preventDefault()
 });
 
-function onScanSuccess(decodedText, _) {
-    processDecodedText(decodedText)
-}
+$('#qrImageFile').on('change', event => {
+    let file = $('#qrImageFile').prop('files')[0];
+    console.log(file);
+    QrScanner.scanImage(file).then(result => {
+        processDecodedText(result)
+    }).catch(err => {
+        console.log(err);
+        swal.fire({
+            title: 'Error',
+            html: 'Cannot read QR code. Please make sure to only attach an image that contains a QR code.' +
+                `<br>Error message: <code>${err}</code>`,
+            icon: 'error'
+        });
+    });
+});
 
 function processDecodedText(decodedText) {
     $('#qrData').text(decodedText.slice(0, 20) + '...');
     qrData = decodedText;
-    $('#reader__dashboard_section_csr > span:nth-child(2) > button:nth-child(2)').click();
     $('#btnSubmit').focus();
     $('#hasQrData').show();
 }
