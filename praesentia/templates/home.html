@@ -45,15 +45,19 @@
                             location from GPS</button>
                     </small>
                 </div>
-                <div id="reader_container">
-                    <label>QR Image:</label>
-                    <input type="file" accept="image/*" capture="environment" id="qrImageFile">
+                <div id="qrContainer">
+                    <div id="qrInput">
+                        <label>QR Image:</label>
+                        <input type="file" accept="image/*" id="qrImageFile">
+                    </div>
+                    <label>
+                        <small>
+                            <strong>ProTip!</strong> You can scan your QR code image from your clipboard, just
+                            <kbd>ctrl</kbd>+<kbd>v</kbd>
+                            it here.
+                        </small>
+                    </label>
                 </div>
-                <label><small>
-                        <strong>ProTip!</strong> You can scan your QR code image from your clipboard, just
-                        <kbd>ctrl</kbd>+<kbd>v</kbd>
-                        it here.
-                    </small></label>
                 <br>
                 <label><span id="hasQrData">✓</span> QR Data: <code id="qrData">-</code></label><br>
                 <div class="pure-g">
