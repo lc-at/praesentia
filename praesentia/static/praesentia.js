@@ -19,18 +19,18 @@ $('body').on('paste', event => {
 });
 
 $('#qrImageFile').on('change', event => {
-    let file = $('#qrImageFile').prop('files')[0];
+    let file = event.target.files[0];
     console.log(file);
     QrScanner.scanImage(file).then(result => {
         processDecodedText(result)
     }).catch(err => {
-        console.log(err);
         swal.fire({
             title: 'Error',
             html: 'Cannot read QR code. Please make sure to only attach an image that contains a QR code.' +
-                `<br>Error message: <code>${err}</code>`,
+                `<br><code>${err}</code>`,
             icon: 'error'
         });
+        $('#qrImageFile').val('');
     });
 });
 
