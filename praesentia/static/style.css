@@ -35,28 +35,10 @@
     margin-bottom: 1rem;
 }
 
-#reader__filescan_input {
-    display: inline !important;
-    text-overflow: ellipsis !important;
-    overflow: hidden !important;
-}
-
-#reader__camera_selection {
-    display: inline;
-    font-size: 80%;
-    max-width: 200px;
-    overflow: hidden;
-}
-
-#reader > div:nth-child(1) > span:nth-child(1) > a {
-    font-size: smaller;
-    color: inherit;
-    text-decoration: none;
-}
-
 #reader_container {
-    max-width: 100% !important;
-    overflow-x: hidden !important;
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 1px solid grey;
 }
 
 footer {
