@@ -45,12 +45,20 @@
                             location from GPS</button>
                     </small>
                 </div>
-                <div id="reader_container">
-                    <div id="reader" width="600px" class="mb-3"></div>
-                    <small><strong>ProTip!</strong> You can scan your QR code image from your clipboard, just
-                        <kbd>ctrl</kbd>+<kbd>v</kbd>
-                        it here.</small>
-                </div><br>
+                <div id="qrContainer">
+                    <div id="qrInput">
+                        <label>QR Image:</label>
+                        <input type="file" accept="image/*" id="qrImageFile">
+                    </div>
+                    <label>
+                        <small>
+                            <strong>ProTip!</strong> You can scan your QR code image from your clipboard, just
+                            <kbd>ctrl</kbd>+<kbd>v</kbd>
+                            it here.
+                        </small>
+                    </label>
+                </div>
+                <br>
                 <label><span id="hasQrData">✓</span> QR Data: <code id="qrData">-</code></label><br>
                 <div class="pure-g">
                     <div class="pure-u" style="margin-right: 1rem;">
@@ -77,7 +85,7 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <script src="{{ url_for('static', filename='html5-qrcode.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='qr-scanner.umd.min.js') }}"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ url_for('static', filename='praesentia.js') }}"></script>
 </body>
