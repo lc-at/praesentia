@@ -1,39 +1,33 @@
-let qrData = '';
-let html5QrcodeScanner = new Html5QrcodeScanner(
-    'reader',
-    {
-        fps: 10,
-        qrbox: 250,
-    });
+QrScanner.WORKER_PATH = 'static/qr-scanner-worker.min.js';
 
-html5QrcodeScanner.render(onScanSuccess);
+let qrData = '';
 
 $('body').on('paste', event => {
     let paste = event.originalEvent.clipboardData || window.clipboardData;
-
-    if(paste.files.length > 0) {
-        html5QrcodeScanner.html5Qrcode.scanFile(paste.files[0], true)
-        .then(decodedText => {
-            processDecodedText(decodedText)
-        })
-        .catch(err => {
-            swal.fire('Error', 'Cannot read QR code. Please make sure to only paste a QR code image.', 'error');
-        });
+    if (paste.files.length > 0) {
+        processQrImage(paste.files[0]);
     }
 
-    event.preventDefault()
+    event.preventDefault();
 });
 
-function onScanSuccess(decodedText, _) {
-    processDecodedText(decodedText)
-}
+$('#qrImageFile').on('change', event => {
+    processQrImage(event.target.files[0]);
+});
 
-function processDecodedText(decodedText) {
-    $('#qrData').text(decodedText.slice(0, 20) + '...');
-    qrData = decodedText;
-    $('#reader__dashboard_section_csr > span:nth-child(2) > button:nth-child(2)').click();
-    $('#btnSubmit').focus();
-    $('#hasQrData').show();
+function processQrImage(file) {
+    $('#qrData').text('scanning...');
+    QrScanner.scanImage(file).then((decodedText) => {
+        $('#qrData').text(decodedText.slice(0, 20) + '...');
+        qrData = decodedText;
+        $('#btnSubmit').focus();
+        $('#hasQrData').show();
+    }).catch(err => {
+        swal.fire('Error', 'Cannot read QR code. ' +
+            'Please make sure that it is an image that contains a QR code.', 'error');
+        $('#qrImageFile').val('');
+        $('#qrData').text('-');
+    });
 }
 
 function randomizeLatLong() {
