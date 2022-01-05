@@ -1,6 +1,7 @@
 QrScanner.WORKER_PATH = 'static/qr-scanner-worker.min.js';
 
 let qrData = '';
+let capture, worker;
 
 $('body').on('paste', event => {
     let paste = event.originalEvent.clipboardData || window.clipboardData;
@@ -109,7 +110,7 @@ $('#getLocation').click(function () {
     }
 });
 
-$(document).ready(function () {
+$(document).ready(async function () {
     $('#hasQrData').hide();
     if (localStorage.getItem('username')) {
         $('#username').val(localStorage.getItem('username'));
@@ -118,4 +119,74 @@ $(document).ready(function () {
         $('#longitude').val(localStorage.getItem('long'));
         $('#rememberMe').prop('checked', true);
     }
+    capture = new StreamDisplay(scanVideoStream);
+    worker = await QrScanner.createQrEngine(QrScanner.WORKER_PATH);
 });
+
+$('#btnStartScan').click(function () {
+        startCapture();
+});
+
+$('#btnStopScan').click(function () {
+    stopCapture();
+});
+  
+async function startCapture() {
+    try {
+      await capture.startCapture();
+      $('#btnStartScan').prop('disabled', true);
+      $('#btnStopScan').prop('disabled', false);
+    } catch (err) {
+      console.error(err);
+    }
+}
+  
+$('#autoSubmit').click(function () {
+    if ($('#autoSubmit').prop('checked')) {
+      const username = $('#username').val();
+      const password = $('#password').val();
+      const lat = $('#latitude').val();
+      const long = $('#longitude').val();
+  
+      if (
+        username.length <= 0 ||
+        password.length <= 0 ||
+        lat.length <= 0 ||
+        long.length <= 0
+      ) {
+        $('#autoSubmit').prop('checked', false);
+        return swal.fire(
+          'Error',
+          'Please make sure to fill out all the fields.',
+          'error'
+        );
+      }
+    }
+});
+  
+const scanVideoStream = async (imageData) => {
+    const image = await createImageBitmap(imageData);
+  
+    QrScanner.scanImage(image, null, worker)
+      .then((code) => {
+        $('#qrData').text(code.slice(0, 20) + '...');
+        qrData = code;
+        $('#btnSubmit').focus();
+        $('#hasQrData').show();
+  
+        stopCapture();
+  
+        if ($('#autoSubmit').prop('checked')) {
+          $('#btnSubmit').click();
+        }
+      })
+      .catch((e) => {});
+};
+  
+function stopCapture() {
+    $('#btnStartScan').prop('disabled', false);
+    $('#btnStopScan').prop('disabled', true);
+  
+    capture.stopCapture();
+}
+  

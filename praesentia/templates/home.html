@@ -50,6 +50,23 @@
                         <label>QR Image:</label>
                         <input type="file" accept="image/*" id="qrImageFile">
                     </div>
+                    <div class="shareScreen" id="qrInput">
+                        <label> If you want use screen share instead of Image </label>
+                        <button type="button" id="btnStartScan">Start scanning</button>
+                        <button type="button" id="btnStopScan" disabled>
+                            Stop scanning
+                        </button>
+                        <div>
+                            <label class="pure-checkbox" for="autoSubmit">
+                                <input type="checkbox" id="autoSubmit" />
+                                Auto Submit
+                            </label>
+                        </div>
+                        <small>
+                            <strong>Note:</strong> This feature is not supported on Android
+                            devices.
+                        </small>
+                    </div>
                     <label>
                         <small>
                             <strong>ProTip!</strong> You can scan your QR code image from your clipboard, just
@@ -86,6 +103,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="{{ url_for('static', filename='qr-scanner.umd.min.js') }}"></script>
+    <script src="https://unpkg.com/stream-display@latest/dist/stream-display.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ url_for('static', filename='praesentia.js') }}"></script>
 </body>
