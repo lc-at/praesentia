@@ -1,32 +1,24 @@
-QrScanner.WORKER_PATH = 'static/qr-scanner-worker.min.js';
+QrScanner.WORKER_PATH = 'static/qr-scanner/qr-scanner-worker.min.js';
 
 let qrData = '';
-let capture, worker;
+let capture;
 
-$('body').on('paste', event => {
-    let paste = event.originalEvent.clipboardData || window.clipboardData;
-    if (paste.files.length > 0) {
-        processQrImage(paste.files[0]);
-    }
-
-    event.preventDefault();
-});
-
-$('#qrImageFile').on('change', event => {
-    processQrImage(event.target.files[0]);
-});
-
-function processQrImage(file) {
+function processQrImage(file, ignore_error = false) {
     $('#qrData').text('scanning...');
     QrScanner.scanImage(file).then((decodedText) => {
         $('#qrData').text(decodedText.slice(0, 20) + '...');
         qrData = decodedText;
         $('#btnSubmit').focus();
+        if ($('#autoSubmit').prop('checked')) $('#btnSubmit').click();
         $('#hasQrData').show();
+        $('#btnStopScreenSharing').click();
     }).catch(err => {
+        if (ignore_error) return;
+        console.log(err);
         swal.fire('Error', 'Cannot read QR code. ' +
             'Please make sure that it is an image that contains a QR code.', 'error');
         $('#qrImageFile').val('');
+        $('#hasQrData').hide();
         $('#qrData').text('-');
     });
 }
@@ -52,6 +44,42 @@ function randomizeLatLong() {
     };
 }
 
+async function scanVideoStream(imageData) {
+    const image = await createImageBitmap(imageData);
+    processQrImage(image, true);
+};
+
+async function startCapture() {
+    try {
+        await capture.startCapture();
+        $('#btnStartScreenSharing').prop('disabled', true);
+        $('#btnStopScreenSharing').prop('disabled', false);
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+
+function stopCapture() {
+    $('#btnStartScreenSharing').prop('disabled', false);
+    $('#btnStopScreenSharing').prop('disabled', true);
+
+    capture.stopCapture();
+}
+
+$('body').on('paste', event => {
+    let paste = event.originalEvent.clipboardData || window.clipboardData;
+    if (paste.files.length > 0) {
+        processQrImage(paste.files[0]);
+    }
+
+    event.preventDefault();
+});
+
+$('#qrImageFile').on('change', event => {
+    processQrImage(event.target.files[0]);
+});
+
 $('#hurry').click(function () {
     if ($('#hurry').prop('checked')) {
         const randomLocation = randomizeLatLong()
@@ -76,6 +104,7 @@ $('#btnSubmit').click(function () {
         localStorage.setItem('password', password);
         localStorage.setItem('lat', lat);
         localStorage.setItem('long', long);
+        localStorage.setItem('auto_submit', $('#autoSubmit').prop('checked'));
     } else {
         localStorage.clear();
     }
@@ -110,6 +139,19 @@ $('#getLocation').click(function () {
     }
 });
 
+$('#qrCodeSourceSelect').on('change', function () {
+    [$('#qrFileInput'), $('#qrScreenInput')].forEach(e => e.hide());
+    $('#' + $(this).val()).show();
+});
+
+$('#btnStartScreenSharing').click(function () {
+    startCapture();
+});
+
+$('#btnStopScreenSharing').click(function () {
+    stopCapture();
+});
+
 $(document).ready(async function () {
     $('#hasQrData').hide();
     if (localStorage.getItem('username')) {
@@ -118,75 +160,7 @@ $(document).ready(async function () {
         $('#latitude').val(localStorage.getItem('lat'));
         $('#longitude').val(localStorage.getItem('long'));
         $('#rememberMe').prop('checked', true);
+        $('#autoSubmit').prop('checked', localStorage.getItem('auto_submit'));
     }
     capture = new StreamDisplay(scanVideoStream);
-    worker = await QrScanner.createQrEngine(QrScanner.WORKER_PATH);
 });
-
-$('#btnStartScan').click(function () {
-        startCapture();
-});
-
-$('#btnStopScan').click(function () {
-    stopCapture();
-});
-  
-async function startCapture() {
-    try {
-      await capture.startCapture();
-      $('#btnStartScan').prop('disabled', true);
-      $('#btnStopScan').prop('disabled', false);
-    } catch (err) {
-      console.error(err);
-    }
-}
-  
-$('#autoSubmit').click(function () {
-    if ($('#autoSubmit').prop('checked')) {
-      const username = $('#username').val();
-      const password = $('#password').val();
-      const lat = $('#latitude').val();
-      const long = $('#longitude').val();
-  
-      if (
-        username.length <= 0 ||
-        password.length <= 0 ||
-        lat.length <= 0 ||
-        long.length <= 0
-      ) {
-        $('#autoSubmit').prop('checked', false);
-        return swal.fire(
-          'Error',
-          'Please make sure to fill out all the fields.',
-          'error'
-        );
-      }
-    }
-});
-  
-const scanVideoStream = async (imageData) => {
-    const image = await createImageBitmap(imageData);
-  
-    QrScanner.scanImage(image, null, worker)
-      .then((code) => {
-        $('#qrData').text(code.slice(0, 20) + '...');
-        qrData = code;
-        $('#btnSubmit').focus();
-        $('#hasQrData').show();
-  
-        stopCapture();
-  
-        if ($('#autoSubmit').prop('checked')) {
-          $('#btnSubmit').click();
-        }
-      })
-      .catch((e) => {});
-};
-  
-function stopCapture() {
-    $('#btnStartScan').prop('disabled', false);
-    $('#btnStopScan').prop('disabled', true);
-  
-    capture.stopCapture();
-}
-  
