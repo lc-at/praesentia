@@ -6,17 +6,18 @@ let capture;
 function processQrImage(file, ignore_error = false) {
     $('#qrData').text('scanning...');
     QrScanner.scanImage(file).then((decodedText) => {
-        $('#qrData').text(decodedText.slice(0, 20) + '...');
         qrData = decodedText;
+        $('#qrData').text(decodedText.slice(0, 20) + '...');
         $('#btnSubmit').focus();
-        if ($('#autoSubmit').prop('checked')) $('#btnSubmit').click();
+        if ($('#autoSubmit').prop('checked')) {
+            $('#btnSubmit').click();
+        }
         $('#hasQrData').show();
         $('#btnStopScreenSharing').click();
     }).catch(err => {
-        if (ignore_error) return;
-        console.log(err);
-        swal.fire('Error', 'Cannot read QR code. ' +
-            'Please make sure that it is an image that contains a QR code.', 'error');
+        if (!ignore_error)
+            swal.fire('Error', 'Cannot read QR code. ' +
+                'Please make sure that it is an image that contains a QR code.', 'error');
         $('#qrImageFile').val('');
         $('#hasQrData').hide();
         $('#qrData').text('-');
