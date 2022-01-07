@@ -1,11 +1,11 @@
 QrScanner.WORKER_PATH = 'static/qr-scanner/qr-scanner-worker.min.js';
 
 let qrData = '';
-let capture;
+let capture, worker;
 
 function processQrImage(file, ignore_error = false) {
     $('#qrData').text('scanning...');
-    QrScanner.scanImage(file).then((decodedText) => {
+    QrScanner.scanImage(file, null, worker).then((decodedText) => {
         qrData = decodedText;
         $('#qrData').text(decodedText.slice(0, 20) + '...');
         $('#btnSubmit').focus();
@@ -164,4 +164,5 @@ $(document).ready(async function () {
         $('#autoSubmit').prop('checked', localStorage.getItem('auto_submit'));
     }
     capture = new StreamDisplay(scanVideoStream);
+    worker = await QrScanner.createQrEngine(QrScanner.WORKER_PATH);
 });
