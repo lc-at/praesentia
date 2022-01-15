@@ -3,9 +3,9 @@ QrScanner.WORKER_PATH = 'static/qr-scanner/qr-scanner-worker.min.js';
 let qrData = '';
 let capture, worker;
 
-function processQrImage(file, ignore_error = false) {
+function processQrImage(file, hide_alert = false) {
     $('#qrData').text('scanning...');
-    QrScanner.scanImage(file, null, worker).then((decodedText) => {
+    return QrScanner.scanImage(file, null, worker).then((decodedText) => {
         qrData = decodedText;
         $('#qrData').text(decodedText.slice(0, 20) + '...');
         $('#btnSubmit').focus();
@@ -13,14 +13,15 @@ function processQrImage(file, ignore_error = false) {
             $('#btnSubmit').click();
         }
         $('#hasQrData').show();
-        $('#btnStopScreenSharing').click();
+        return true;
     }).catch(err => {
-        if (!ignore_error)
+        if (!hide_alert)
             swal.fire('Error', 'Cannot read QR code. ' +
                 'Please make sure that it is an image that contains a QR code.', 'error');
         $('#qrImageFile').val('');
         $('#hasQrData').hide();
         $('#qrData').text('-');
+        return false;
     });
 }
 
@@ -47,7 +48,9 @@ function randomizeLatLong() {
 
 async function scanVideoStream(imageData) {
     const image = await createImageBitmap(imageData);
-    processQrImage(image, true);
+    if (await processQrImage(image, true)) {
+        stopCapture();
+    }
 };
 
 async function startCapture() {
