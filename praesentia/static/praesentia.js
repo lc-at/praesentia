@@ -1,6 +1,7 @@
 QrScanner.WORKER_PATH = 'static/qr-scanner/qr-scanner-worker.min.js';
 
 let qrData = '';
+let tokenAuth = false;
 let capture, worker;
 
 function processQrImage(file, hide_alert = false) {
@@ -75,9 +76,8 @@ $('body').on('paste', event => {
     let paste = event.originalEvent.clipboardData || window.clipboardData;
     if (paste.files.length > 0) {
         processQrImage(paste.files[0]);
+        event.preventDefault();
     }
-
-    event.preventDefault();
 });
 
 $('#qrImageFile').on('change', event => {
@@ -99,13 +99,15 @@ $('#btnSubmit').click(function () {
     const lat = $('#latitude').val();
     const long = $('#longitude').val();
 
-    if (username.length <= 0 || password.length <= 0 || lat.length <= 0 || long.length <= 0 || qrData.length <= 0) {
+    if ((!tokenAuth && (username.length <= 0 || password.length <= 0)) || lat.length <= 0 || long.length <= 0 || qrData.length <= 0) {
         return swal.fire('Error', 'Please make sure to fill out all the fields.', 'error');
     }
 
     if ($('#rememberMe').prop('checked')) {
-        localStorage.setItem('username', username);
-        localStorage.setItem('password', password);
+        if (!tokenAuth) {
+            localStorage.setItem('username', username);
+            localStorage.setItem('password', password);
+        }
         localStorage.setItem('lat', lat);
         localStorage.setItem('long', long);
         localStorage.setItem('auto_submit', $('#autoSubmit').prop('checked'));
@@ -122,9 +124,13 @@ $('#btnSubmit').click(function () {
         qr_data: qrData,
     }, function (data) {
         const title = data.ok ? 'Success' : 'Error';
+        let extra_message = '';
+        if (data.token) {
+            extra_message = `<div class="token">${data.token}</div>`;
+        }
         return swal.fire({
             title: title,
-            html: `<code>${data.message}</code>`,
+            html: `<code>${data.message}</code>${extra_message}`,
             icon: title.toLowerCase(),
         })
     }).fail(function () {
@@ -154,6 +160,17 @@ $('#btnStartScreenSharing').click(function () {
 
 $('#btnStopScreenSharing').click(function () {
     stopCapture();
+});
+
+$('#username').on('keyup', function () {
+    console.log($(this).val())
+    if ($(this).val().startsWith('token:')) {
+        $('#passwordContainer').hide();
+        tokenAuth = true;
+    } else {
+        $('#passwordContainer').show();
+        tokenAuth = false;
+    }
 });
 
 $(document).ready(async function () {

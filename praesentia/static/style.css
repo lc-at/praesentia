@@ -42,6 +42,14 @@
     box-sizing: border-box;
 }
 
+.token {
+    margin-top: 1rem;
+    font-family: monospace;
+    color: grey;
+    font-size: x-small;
+    word-wrap: break-word;
+}
+
 footer {
     color: grey;
     text-align: center;
