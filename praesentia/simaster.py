@@ -23,7 +23,7 @@ class SimasterQrPresence:
         self.a_id = a_id if a_id else self._generate_random_a_id()
         self.logged_in = False
         self.session_id = None
-        self.account_data = {}
+        self.group_id = None
         self.session = requests.Session()
         self.session.headers.update(self.HEADERS)
 
@@ -41,10 +41,22 @@ class SimasterQrPresence:
         data = req.json()
         self.session_id = data['sesId']
         self.group_id = data['groupMenu']
-        self.account_data['name'] = data['namaLengkap']
-        self.account_data['group'] = data['groupMenuNama']
-        self.account_data['id'] = data['userTipeNomor']
         return self._commit_device()
+
+
+    def load_session(self, serialized_session):
+        try:
+            _, session_id, group_id = serialized_session.split(':')
+        except ValueError:
+            return False
+
+        self.session_id = session_id
+        self.group_id = group_id
+        self.logged_in = True
+        return True
+
+    def serialize_session(self):
+        return f'token:{self.session_id}:{self.group_id}'
 
     def send_qr_presence(self, qr_data, lat, long):
         token = self._request_token()
