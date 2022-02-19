@@ -163,7 +163,6 @@ $('#btnStopScreenSharing').click(function () {
 });
 
 $('#username').on('keyup', function () {
-    console.log($(this).val())
     if ($(this).val().startsWith('token:')) {
         $('#passwordContainer').hide();
         tokenAuth = true;
