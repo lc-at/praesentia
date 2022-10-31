@@ -6,7 +6,7 @@ You can use an image file containing a QR code (can be obtained using a screensh
 ## Frequently Asked Questions (FAQ)
 
 ### Demo
-The demo is available at https://lcat.dev/praesentia. Don't expect a 99.99% uptime, the server is an old Raspberry Pi 3. As a fallback, you can also use https://praesentia.herokuapp.com.
+The demo is available at https://lcat.dev/praesentia. Don't expect a 99.99% uptime, the server is an old Raspberry Pi 3. As a fallback, you can also use https://praesentia.onrender.com.
 
 ### Background
 - Many UGM students are required to use SIMASTER mobile app to scan QR codes to fill their presence list. This mostly means that a student needs at least two devices to make the mechanism works.
